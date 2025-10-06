@@ -27,12 +27,14 @@ spec:
             - name: RESTIC_HOST
               value: kubernetes
             - name: RESTIC_REPOSITORY
-              value: /backup
+              value: /mnt/backup
+            - name: DATA_DIR
+              value: /mnt/data
           volumeMounts:
             - name: backup
-              mountPath: /backup
+              mountPath: /mnt/backup
             - name: data
-              mountPath: /data
+              mountPath: /mnt/data
       containers:
         - name: home-assistant
           image: homeassistant/home-assistant:2025.5

@@ -7,6 +7,7 @@ resources:
 - esphome/pvc.yaml
 - esphome/service.yaml
 - ingress_route.yaml
+- pv.yaml
 - ../../../../templates/home-assistant
 patches:
 - path: deployment.yaml

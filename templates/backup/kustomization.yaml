@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: backup
+resources:
+- rest-server/deployment.yaml
+- rest-server/pvc.yaml
+- rest-server/service.yaml
+- namespace.yaml

@@ -1,0 +1,45 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: restic-debug
+spec:
+  schedule: "@yearly"
+  suspend: true
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: cloudflare-proxy
+              image: caddy:2
+              ports:
+                - containerPort: 8888
+              envFrom:
+                - secretRef:
+                    name: cloudflare-service-token
+              volumeMounts:
+                - name: caddy-config
+                  mountPath: /etc/caddy
+            - name: restic-backup
+              image: ghcr.io/infinityvault/restic-backup:0.0.2
+              command: ["sleep", "86400"]
+              env:
+                - name: RESTIC_HOST
+                  value: kubernetes
+                - name: RESTIC_REPOSITORY
+                  value: /backup
+              envFrom:
+                - secretRef:
+                    name: restic-backup
+              volumeMounts:
+                - name: backup
+                  mountPath: /backup
+                - name: data
+                  mountPath: /data
+                  readOnly: true
+          restartPolicy: Never
+          volumes:
+            - name: caddy-config
+              configMap:
+                name: caddy-config
+      backoffLimit: 0

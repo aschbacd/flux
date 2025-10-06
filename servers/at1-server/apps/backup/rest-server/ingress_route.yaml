@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rest-server
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`at1-backup.dominikaschbacher.com`)
+      kind: Rule
+      services:
+        - name: rest-server
+          port: 80
+  tls:
+    certResolver: letsencrypt

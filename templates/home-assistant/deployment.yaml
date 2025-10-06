@@ -33,6 +33,7 @@ spec:
           volumeMounts:
             - name: backup
               mountPath: /mnt/backup
+              readOnly: true
             - name: data
               mountPath: /mnt/data
       containers:

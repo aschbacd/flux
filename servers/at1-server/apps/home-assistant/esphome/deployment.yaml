@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: esphome
+  labels:
+    app: esphome
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: esphome
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: esphome
+    spec:
+      containers:
+        - name: esphome
+          image: ghcr.io/esphome/esphome:2025.9
+          env:
+            - name: TZ
+              value: Europe/Vienna
+            - name: ESPHOME_DASHBOARD_USE_PING
+              value: "true"
+          ports:
+            - containerPort: 6052
+          volumeMounts:
+            - name: data
+              subPath: config
+              mountPath: /config
+            - name: data
+              subPath: cache
+              mountPath: /cache
+      hostNetwork: true
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: esphome-data

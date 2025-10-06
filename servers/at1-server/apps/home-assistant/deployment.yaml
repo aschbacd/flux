@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: home-assistant
+spec:
+  template:
+    spec:
+      containers:
+        - name: home-assistant
+          image: homeassistant/home-assistant:2025.9
+          ports:
+            - containerPort: 8123
+            - containerPort: 21063
+              hostPort: 21063
+              name: homekit-tcp
+              protocol: TCP
+            - containerPort: 5353
+              hostPort: 5353
+              name: homekit-udp
+              protocol: UDP
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /dev/ttyUSB0
+              name: zigbee-bridge
+            - mountPath: /config
+              name: data
+      volumes:
+        - name: zigbee-bridge
+          hostPath:
+            path: /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_82fc1d8ce35fec11a6af345f25bfaa52-if00-port0
+        - name: data
+          persistentVolumeClaim:
+            claimName: home-assistant-data
+        - name: backup
+          persistentVolumeClaim:
+            claimName: home-assistant-backup

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: home-assistant
+  labels:
+    app: home-assistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: home-assistant
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: home-assistant
+    spec:
+      initContainers:
+        - name: restic-backup-restore
+          image: ghcr.io/infinityvault/restic-backup:0.0.2
+          args: ["restore"]
+          envFrom:
+            - secretRef:
+                name: restic-backup
+          env:
+            - name: RESTIC_HOST
+              value: kubernetes
+            - name: RESTIC_REPOSITORY
+              value: /backup
+          volumeMounts:
+            - name: backup
+              mountPath: /backup
+            - name: data
+              mountPath: /data
+      containers:
+        - name: home-assistant
+          image: homeassistant/home-assistant:2025.5
+          env:
+            - name: TZ
+              value: Europe/Vienna
+          ports:
+            - containerPort: 8123
+          volumeMounts:
+            - mountPath: /config
+              name: data
+      hostNetwork: true
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: home-assistant-data
+        - name: backup
+          persistentVolumeClaim:
+            claimName: home-assistant-backup

@@ -27,17 +27,15 @@ spec:
                 - name: RESTIC_HOST
                   value: kubernetes
                 - name: RESTIC_REPOSITORY
-                  value: /mnt/backup
-                - name: DATA_DIR
-                  value: /mnt/data
+                  value: /backup
               envFrom:
                 - secretRef:
                     name: restic-backup
               volumeMounts:
                 - name: backup
-                  mountPath: /mnt/backup
+                  mountPath: /backup
                 - name: data
-                  mountPath: /mnt/data
+                  mountPath: /data
                   readOnly: true
           restartPolicy: Never
           volumes:

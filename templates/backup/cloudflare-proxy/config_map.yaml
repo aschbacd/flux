@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: restic-backup-cloudflare-proxy
+data:
+  Caddyfile: |-
+    :8888 {
+        reverse_proxy https://{$DOMAIN} {
+            header_up Host {$DOMAIN}
+            header_up CF-Access-Client-Id {$CF_ACCESS_CLIENT_ID}
+            header_up CF-Access-Client-Secret {$CF_ACCESS_CLIENT_SECRET}
+
+            transport http {
+                tls
+            }
+        }
+    }

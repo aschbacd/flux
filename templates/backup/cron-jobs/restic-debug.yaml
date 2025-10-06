@@ -16,7 +16,7 @@ spec:
                 - containerPort: 8888
               envFrom:
                 - secretRef:
-                    name: cloudflare-service-token
+                    name: restic-backup-cloudflare-service-token
               volumeMounts:
                 - name: caddy-config
                   mountPath: /etc/caddy
@@ -41,5 +41,5 @@ spec:
           volumes:
             - name: caddy-config
               configMap:
-                name: caddy-config
+                name: restic-backup-cloudflare-proxy
       backoffLimit: 0

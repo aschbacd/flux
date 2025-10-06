@@ -16,6 +16,23 @@ spec:
       labels:
         app: esphome
     spec:
+      initContainers:
+        - name: restic-backup-restore
+          image: ghcr.io/infinityvault/restic-backup:0.0.2
+          args: ["restore"]
+          envFrom:
+            - secretRef:
+                name: restic-backup
+          env:
+            - name: RESTIC_HOST
+              value: kubernetes
+            - name: RESTIC_REPOSITORY
+              value: /backup
+          volumeMounts:
+            - name: backup
+              mountPath: /backup
+            - name: data
+              mountPath: /data
       containers:
         - name: esphome
           image: ghcr.io/esphome/esphome:2025.9
@@ -38,3 +55,6 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: esphome-data
+        - name: backup
+          persistentVolumeClaim:
+            claimName: esphome-backup

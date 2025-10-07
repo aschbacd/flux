@@ -1,0 +1,7 @@
+resources:
+- ../../../../../../templates/backup/cron-jobs
+
+nameSuffix: -immich
+
+patches:
+- path: restic-debug.yaml

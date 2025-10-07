@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: restic-backup
+spec:
+  schedule: "0 0 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: restic-backup
+              image: ghcr.io/infinityvault/restic-backup:0.0.2
+              env:
+                - name: RESTIC_HOST
+                  value: kubernetes
+                - name: RESTIC_REPOSITORY
+                  value: /backup
+              envFrom:
+                - secretRef:
+                    name: restic-backup
+              args: ["backup"]
+              volumeMounts:
+                - name: backup
+                  mountPath: /backup
+                - name: data
+                  mountPath: /data
+                  readOnly: true
+          restartPolicy: OnFailure

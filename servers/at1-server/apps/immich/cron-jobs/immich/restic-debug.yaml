@@ -12,6 +12,13 @@ spec:
               env:
                 - name: DOMAIN
                   value: at2-backup.dominikaschbacher.com
+            - name: restic-backup
+              volumeMounts:
+                - name: backup
+                  mountPath: /backup
+                - name: data
+                  mountPath: /data
+                  readOnly: false
           volumes:
             - name: data
               persistentVolumeClaim:

@@ -15,10 +15,10 @@ spec:
           volumes:
             - name: data
               persistentVolumeClaim:
-                claimName: home-assistant-data
+                claimName: esphome-data
             - name: backup
               persistentVolumeClaim:
-                claimName: home-assistant-backup
+                claimName: esphome-backup
             - name: caddy-config
               configMap:
                 name: restic-backup-cloudflare-proxy

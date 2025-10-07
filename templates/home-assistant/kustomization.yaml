@@ -6,5 +6,6 @@ resources:
 - esphome/pvc.yaml
 - esphome/service.yaml
 - deployment.yaml
+- namespace.yaml
 - pvc.yaml
 - service.yaml

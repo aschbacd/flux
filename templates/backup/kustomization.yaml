@@ -5,3 +5,4 @@ resources:
 - rest-server/deployment.yaml
 - rest-server/pvc.yaml
 - rest-server/service.yaml
+- namespace.yaml

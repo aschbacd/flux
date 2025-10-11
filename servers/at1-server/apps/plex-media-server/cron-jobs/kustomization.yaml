@@ -1,0 +1,8 @@
+resources:
+- ../../../../../templates/backup/cron-jobs
+
+nameSuffix: -plex-media-server
+
+patches:
+- path: restic-backup.yaml
+- path: restic-debug.yaml

@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: restic-backup
+spec:
+  schedule: "30 3 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: plex-media-server-data
+            - name: backup
+              persistentVolumeClaim:
+                claimName: plex-media-server-backup

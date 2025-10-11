@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex-media-server
+  labels:
+    app: plex-media-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plex-media-server
+  template:
+    metadata:
+      labels:
+        app: plex-media-server
+    spec:
+      initContainers:
+        - name: restic-backup-restore
+          image: ghcr.io/infinityvault/restic-backup:0.0.2
+          args: ["restore"]
+          envFrom:
+            - secretRef:
+                name: restic-backup
+          env:
+            - name: RESTIC_HOST
+              value: kubernetes
+            - name: RESTIC_REPOSITORY
+              value: /backup
+          volumeMounts:
+            - name: backup
+              mountPath: /backup
+              readOnly: true
+            - name: data
+              mountPath: /data
+      containers:
+        - name: plex-media-server
+          image: linuxserver/plex:1.41.3
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Etc/UTC"
+            - name: VERSION
+              value: docker
+          volumeMounts:
+            - name: data
+              mountPath: /config
+            - name: library
+              mountPath: /mnt/library
+              readOnly: true
+      hostNetwork: true
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: plex-media-server-data
+        - name: backup
+          persistentVolumeClaim:
+            claimName: plex-media-server-backup
+        - name: library
+          persistentVolumeClaim:
+            claimName: plex-media-server-library

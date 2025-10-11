@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: restic-debug
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: cloudflare-proxy
+              env:
+                - name: DOMAIN
+                  value: at2-backup.dominikaschbacher.com
+            - name: restic-backup
+              volumeMounts:
+                - name: backup
+                  mountPath: /backup
+                - name: data
+                  mountPath: /data
+                  readOnly: false
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: plex-media-server-data
+            - name: backup
+              persistentVolumeClaim:
+                claimName: plex-media-server-backup
+            - name: caddy-config
+              configMap:
+                name: restic-backup-cloudflare-proxy

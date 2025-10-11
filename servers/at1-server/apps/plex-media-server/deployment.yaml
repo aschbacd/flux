@@ -34,7 +34,7 @@ spec:
               mountPath: /data
       containers:
         - name: plex-media-server
-          image: linuxserver/plex:1.41.3
+          image: linuxserver/plex:1.42.2
           env:
             - name: PUID
               value: "1000"

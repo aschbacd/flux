@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: immich
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`at2-immich.dominikaschbacher.com`)
+      kind: Rule
+      services:
+        - name: immich
+          port: 80
+  tls:
+    certResolver: letsencrypt

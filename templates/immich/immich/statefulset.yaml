@@ -20,11 +20,15 @@ spec:
           envFrom:
             - secretRef:
                 name: restic-backup
+            - secretRef:
+                name: postgres
           env:
             - name: RESTIC_HOST
               value: kubernetes
             - name: RESTIC_REPOSITORY
               value: /backup
+            - name: POSTGRES_HOST
+              value: postgres
           volumeMounts:
             - name: backup
               mountPath: /backup

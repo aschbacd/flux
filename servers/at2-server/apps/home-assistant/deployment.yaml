@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: home-assistant
+spec:
+  template:
+    spec:
+      containers:
+        - name: home-assistant
+          image: homeassistant/home-assistant:2025.9
+          ports:
+            - containerPort: 8123
+            - containerPort: 21063
+              hostPort: 21063
+              name: homekit-tcp
+              protocol: TCP
+            - containerPort: 5353
+              hostPort: 5353
+              name: homekit-udp
+              protocol: UDP
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /config
+              name: data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: home-assistant-data
+        - name: backup
+          persistentVolumeClaim:
+            claimName: home-assistant-backup

@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: restic-debug
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: cloudflare-proxy
+              env:
+                - name: DOMAIN
+                  value: at1-backup.dominikaschbacher.com
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: home-assistant-data
+            - name: backup
+              persistentVolumeClaim:
+                claimName: home-assistant-backup
+            - name: caddy-config
+              configMap:
+                name: restic-backup-cloudflare-proxy

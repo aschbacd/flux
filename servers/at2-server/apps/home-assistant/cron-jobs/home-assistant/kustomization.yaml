@@ -1,0 +1,8 @@
+resources:
+- ../../../../../../templates/backup/cron-jobs
+
+nameSuffix: -home-assistant
+
+patches:
+- path: restic-backup.yaml
+- path: restic-debug.yaml
